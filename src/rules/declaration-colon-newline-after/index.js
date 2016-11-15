@@ -12,6 +12,7 @@ export const ruleName = "declaration-colon-newline-after"
 export const messages = ruleMessages(ruleName, {
   expectedAfter: () => "Expected newline after \":\"",
   expectedAfterMultiLine: () => "Expected newline after \":\" with a multi-line declaration",
+  rejectedAfter: () => "Unexpected newline after \":\"",
 })
 
 export default function (expectation) {
@@ -22,6 +23,7 @@ export default function (expectation) {
       possible: [
         "always",
         "always-multi-line",
+        "never",
       ],
     })
     if (!validOptions) { return }

@@ -217,11 +217,24 @@ export default function (targetWhitespace, expectation, messages) {
 
   function rejectAfter(messageFunc = messages.rejectedAfter) {
     const { source, index } = activeArgs
-    const oneCharAfter = source[index + 1]
 
-    if (isValue(oneCharAfter) && isWhitespace(oneCharAfter)) {
-      activeArgs.err(messageFunc(activeArgs.errTarget ? activeArgs.errTarget : source[index]))
+    const oneCharAfter = source[index + 1]
+    const twoCharsAfter = source[index + 2]
+
+    if (!isValue(oneCharAfter)) { return }
+
+    if (targetWhitespace === "newline") {
+      var followedByNewline = {
+        windows: oneCharAfter === "\r" && twoCharsAfter === "\n",
+        unix: oneCharAfter === "\n"
+      };
+
+      if (followedByNewline.windows === false && followedByNewline.unix === false) { return }
     }
+
+    if (targetWhitespace === "space" && oneCharAfter !== " ") { return }
+
+    activeArgs.err(messageFunc(activeArgs.errTarget ? activeArgs.errTarget : source[index]))
   }
 
   return {
